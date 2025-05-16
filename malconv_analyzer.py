@@ -22,6 +22,10 @@ import hashlib
 import time
 import resource
 import psutil
+import asyncio
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+import aiohttp
 
 import numpy
 if not hasattr(numpy, 'infty'):
@@ -55,23 +59,59 @@ BANNER = """
 """
 
 # Configure logging
-def setup_logging(debug: bool = False) -> None:
-    """Setup logging configuration with timestamp in filename"""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = f'malconv_analysis_{timestamp}.log'
-    
-    level = logging.DEBUG if debug else logging.INFO
-    
-    logging.basicConfig(
-        level=level,
-        format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler(sys.stdout)
-        ]
-    )
-    logging.info("Starting MalConv Analyzer Tool")
-    logging.debug(f"Debug mode: {debug}")
+def setup_logging(target_file: str, debug: bool = False) -> None:
+    """Setup logging configuration with enhanced debug information"""
+    if debug:
+        # Create logs directory inside output folder
+        logs_dir = os.path.join("logs")
+        os.makedirs(logs_dir, exist_ok=True)
+        
+        # Generate log filename with timestamp and target file name
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = os.path.basename(target_file)
+        log_file = os.path.join(logs_dir, f"{filename}_{timestamp}.log")
+        
+        # Create a logger instance
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        
+        # Create handlers
+        file_handler = logging.FileHandler(log_file)
+        console_handler = logging.StreamHandler(sys.stdout)
+        
+        # Create formatters and add it to handlers
+        debug_format = logging.Formatter(
+            '%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+        )
+        file_handler.setFormatter(debug_format)
+        console_handler.setFormatter(debug_format)
+        
+        # Add handlers to the logger
+        logger.addHandler(file_handler)
+        logger.addHandler(console_handler)
+        
+        # Initial debug messages
+        logger.debug("=== System Information ===")
+        logger.debug(f"Analysis started at: {timestamp}")
+        logger.debug(f"Target file: {filename}")
+        logger.debug(f"Log file: {log_file}")
+        logger.debug(f"Python version: {sys.version}")
+        logger.debug(f"Operating system: {os.uname().sysname}")
+        logger.debug(f"Machine: {os.uname().machine}")
+        logger.debug(f"Process ID: {os.getpid()}")
+        
+        # Log memory information
+        mem_info = psutil.virtual_memory()
+        logger.debug(f"Total memory: {mem_info.total / (1024**3):.2f} GB")
+        logger.debug(f"Available memory: {mem_info.available / (1024**3):.2f} GB")
+        logger.debug("="*50)
+    else:
+        # Basic console logging for non-debug mode
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
 
 def print_banner() -> None:
     """Print tool banner with color"""
@@ -107,6 +147,7 @@ class MalwareAnalyzer:
         self.output_folder = output_folder
         self.debug = debug
         self.virustotal = None
+        self.vt_api_key = vt_api_key  # Store API key
         
         if vt_api_key:
             self.initialize_virustotal(vt_api_key)
@@ -118,6 +159,7 @@ class MalwareAnalyzer:
         try:
             print_step("Initializing VirusTotal client...")
             self.virustotal = vt.Client(api_key)
+            self.vt_api_key = api_key  # Ensure API key is set
             print_step("VirusTotal client initialized")
         except Exception as e:
             print_step(f"Error initializing VirusTotal: {str(e)}", is_error=True)
@@ -325,43 +367,88 @@ class MalwareAnalyzer:
             logging.exception("FGSM attack failed:")
             return {}
 
-    def _check_virustotal(self, file_path: str) -> Dict:
-        """Check file with VirusTotal API"""
+    @asynccontextmanager
+    async def timeout(self, seconds: int) -> AsyncGenerator[None, None]:
+        """Async timeout context manager"""
         try:
-            if not self.virustotal:
-                return {}
+            task = asyncio.current_task()
+            if task is None:
+                raise RuntimeError("No active task")
+            yield
+        except asyncio.TimeoutError:
+            print_step(f"Operation timed out after {seconds} seconds", is_warning=True)
+            raise
+        finally:
+            task.cancel()
 
+    async def _check_virustotal_async(self, file_path: str) -> Dict:
+        """Asynchronous VirusTotal check"""
+        if not self.virustotal:
+            return {}
+            
+        try:
             print_step("Scanning with VirusTotal...")
             file_hash = self._get_file_hash(file_path)
-
-            try:
-                # First try to get existing report
-                file_report = self.virustotal.get_object(f"/files/{file_hash}")
-                return self._parse_vt_report(file_report)
-            except vt.APIError as e:
-                # If file not found or other API error, upload and scan
-                if e.code == "NotFoundError":
-                    print_step("File not found in VT database, uploading...", is_warning=True)
-                    with open(file_path, "rb") as f:
-                        upload_result = self.virustotal.scan_file(f)
-                    
-                    # Wait for analysis to complete (max 60 seconds)
-                    for _ in range(60):
-                        analysis = self.virustotal.get_object(f"/analyses/{upload_result.id}")
-                        if analysis.status == "completed":
-                            file_report = self.virustotal.get_object(f"/files/{file_hash}")
-                            return self._parse_vt_report(file_report)
-                        time.sleep(1)
-                    
-                    print_step("VirusTotal analysis timeout", is_warning=True)
+            
+            async with aiohttp.ClientSession() as session:
+                # Try to get existing report
+                try:
+                    headers = {"x-apikey": self.vt_api_key}
+                    async with session.get(
+                        f"https://www.virustotal.com/api/v3/files/{file_hash}",
+                        headers=headers,
+                        timeout=30
+                    ) as response:
+                        if response.status == 200:
+                            report = await response.json()
+                            return self._parse_vt_report(report)
+                            
+                        elif response.status == 404:
+                            print_step("File not found in VT database, uploading...", is_warning=True)
+                            # Upload file
+                            data = aiohttp.FormData()
+                            data.add_field('file', 
+                                         open(file_path, 'rb'),
+                                         filename=os.path.basename(file_path))
+                                         
+                            async with session.post(
+                                "https://www.virustotal.com/api/v3/files",
+                                data=data,
+                                headers=headers,
+                                timeout=60
+                            ) as upload_response:
+                                if upload_response.status == 200:
+                                    upload_json = await upload_response.json()
+                                    analysis_id = upload_json["data"]["id"]
+                                    
+                                    # Wait for analysis to complete
+                                    for _ in range(60):
+                                        async with session.get(
+                                            f"https://www.virustotal.com/api/v3/analyses/{analysis_id}",
+                                            headers=headers
+                                        ) as analysis_response:
+                                            analysis = await analysis_response.json()
+                                            if analysis["data"]["attributes"]["status"] == "completed":
+                                                return self._parse_vt_report(analysis)
+                                        await asyncio.sleep(1)
+                                        
+                except asyncio.TimeoutError:
+                    print_step("VirusTotal request timed out", is_warning=True)
                     return {}
-                else:
-                    raise  # Re-raise other API errors
-
+                    
         except Exception as e:
             print_step(f"VirusTotal scan error: {str(e)}", is_error=True)
             logging.exception("VirusTotal scan failed:")
             return {}
+
+    def _check_virustotal(self, file_path: str) -> Dict:
+        """Synchronous wrapper for VirusTotal check"""
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop.run_until_complete(self._check_virustotal_async(file_path))
+        finally:
+            loop.close()
 
     def _get_file_hash(self, file_path: str) -> str:
         """Calculate SHA256 hash of file"""
@@ -373,12 +460,27 @@ class MalwareAnalyzer:
 
     def _parse_vt_report(self, report) -> Dict:
         """Parse VirusTotal report into summary format"""
-        return {
-            "positives": report.last_analysis_stats.get("malicious", 0),
-            "total": sum(report.last_analysis_stats.values()),
-            "scan_date": report.last_analysis_date,
-            "permalink": f"https://www.virustotal.com/gui/file/{report.id}"
-        }
+        try:
+            # Handle API v3 response format
+            data = report.get("data", {})
+            attributes = data.get("attributes", {})
+            stats = attributes.get("last_analysis_stats", {})
+            
+            return {
+                "positives": stats.get("malicious", 0),
+                "total": sum(stats.values()) if stats else 0,
+                "scan_date": attributes.get("last_analysis_date", "N/A"),
+                "permalink": f"https://www.virustotal.com/gui/file/{data.get('id', 'unknown')}"
+            }
+        except Exception as e:
+            logging.error(f"Error parsing VirusTotal report: {str(e)}")
+            logging.debug(f"Raw report: {report}")
+            return {
+                "positives": 0,
+                "total": 0,
+                "scan_date": "Error parsing report",
+                "permalink": "N/A"
+            }
 
     def print_analysis_report(self, result: Dict[str, Any]) -> None:
         """Print detailed analysis report"""
@@ -482,7 +584,10 @@ Usage Examples:
     
     # Print banner and setup logging
     print_banner()
-    setup_logging(args.debug)
+    setup_logging(
+        target_file=args.target_file,
+        debug=args.debug
+    )
     
     # Create output folder
     os.makedirs(args.output_folder, exist_ok=True)

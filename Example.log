@@ -1,8 +1,5 @@
-secml_malware_env) ┌──(datnlq㉿datnlq)-[~/Malconv/MalConv]
-└─$ # Limit virtual memory to 2GB
-ulimit -v 2097152
-# Run analysis
-python malconv_analyzer.py --target-file samples/shell.exe --vt-api-key e166b9fb053cecc96a86259f87c0e14f49b9497a95acc5bae034453ad674e9d9
+(secml_malware_env) ┌──(datnlq㉿datnlq)-[~/Malconv/MalConv]
+└─$ python malconv_analyzer.py --target-file samples/shell.exe --vt-api-key e166b9fb053cecc96a86259f87c0e14f49b9497a95acc5bae034453ad674e9d9
 
 ╔═══════════════════════════════════════════════════════════════╗
 ║                     MalConv Analyzer Tool                      ║
@@ -13,8 +10,8 @@ python malconv_analyzer.py --target-file samples/shell.exe --vt-api-key e166b9fb
 [+] VirusTotal client initialized
 [+] Initializing MalConv model...
 [+] Initializing attack methods...
-2025-05-15 12:28:05,691 - root - WARNING - Memory Usage: 439.2 MB
-[WARNING] Memory Usage: 439.2 MB
+2025-05-16 05:45:29,720 - root - WARNING - Memory Usage: 438.3 MB
+[WARNING] Memory Usage: 438.3 MB
 [+] Analyzing file: samples/shell.exe
 [+] File size: 72.07 KB
 [+] Scanning with VirusTotal...
@@ -23,15 +20,11 @@ python malconv_analyzer.py --target-file samples/shell.exe --vt-api-key e166b9fb
 [+] Evasion sample saved: analysis_results/header_evasion_shell.exe
 [+] Header Evasion score: 0.0287
 [+] Scanning with VirusTotal...
-2025-05-15 12:28:08,381 - root - WARNING - File not found in VT database, uploading...
-[WARNING] File not found in VT database, uploading...
 [+] Performing FGSM Attack...
 [+] FGSM Attack completed
 [+] FGSM sample saved: analysis_results/fgsm_shell.exe
 [+] FGSM score: 0.0000
 [+] Scanning with VirusTotal...
-2025-05-15 12:29:34,705 - root - WARNING - File not found in VT database, uploading...
-[WARNING] File not found in VT database, uploading...
 
 ==================================================
            MALWARE ANALYSIS REPORT           
@@ -56,8 +49,8 @@ VirusTotal Results (Header Evasion):
 - Report URL: https://www.virustotal.com/gui/file/803b7af03f09e12267239f79a4c240f2a6a5246e14082990339c6ab9fee62f7e
 ==================================================
 
-2025-05-15 12:29:57,548 - asyncio - ERROR - Unclosed client session
-client_session: <aiohttp.client.ClientSession object at 0xffff618a3a00>
-2025-05-15 12:29:57,549 - asyncio - ERROR - Unclosed connector
-connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0xffff5984f6a0>, 1235639.321224401)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0xffff618ace20>, 1235658.560775037)])']
-connector: <aiohttp.connector.TCPConnector object at 0xffff618a35e0>
+2025-05-16 05:45:44,771 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0xffff56cd1a00>
+2025-05-16 05:45:44,774 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0xffff56d2aee0>, 1266757.294680329)])']
+connector: <aiohttp.connector.TCPConnector object at 0xffff56d21910>

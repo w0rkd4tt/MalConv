@@ -1,0 +1,43 @@
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:93] - === System Information ===
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:94] - Analysis started at: 20250516_105644
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:95] - Target file: Bombermania.exe
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:96] - Log file: logs/Bombermania.exe_20250516_105644.log
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:97] - Python version: 3.9.21 (main, Dec 11 2024, 16:27:47) 
+[GCC 11.2.0]
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:98] - Operating system: Linux
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:99] - Machine: aarch64
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:100] - Process ID: 2537581
+2025-05-16 10:56:44,285 - DEBUG - [malconv_analyzer.py:104] - Total memory: 1.87 GB
+2025-05-16 10:56:44,286 - DEBUG - [malconv_analyzer.py:105] - Available memory: 0.41 GB
+2025-05-16 10:56:44,286 - DEBUG - [malconv_analyzer.py:106] - ==================================================
+2025-05-16 10:56:44,286 - INFO - [malconv_analyzer.py:132] - Initializing VirusTotal client...
+2025-05-16 10:56:44,286 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 10:56:44,286 - INFO - [malconv_analyzer.py:132] - VirusTotal client initialized
+2025-05-16 10:56:44,286 - INFO - [malconv_analyzer.py:132] - Initializing MalConv model...
+2025-05-16 10:56:44,385 - INFO - [malconv_analyzer.py:132] - Initializing attack methods...
+2025-05-16 10:56:44,386 - WARNING - [malconv_analyzer.py:128] - Memory Usage: 468.7 MB
+2025-05-16 10:56:44,392 - INFO - [malconv_analyzer.py:132] - Analyzing file: samples/Bombermania.exe
+2025-05-16 10:56:44,392 - DEBUG - [malconv_analyzer.py:211] - Starting analysis of samples/Bombermania.exe
+2025-05-16 10:56:44,393 - INFO - [malconv_analyzer.py:132] - File size: 2736.03 KB
+2025-05-16 10:56:44,652 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 10:56:44,652 - INFO - [malconv_analyzer.py:132] - Scanning with VirusTotal...
+2025-05-16 10:56:44,668 - ERROR - [malconv_analyzer.py:124] - VirusTotal scan error: Timeout context manager should be used inside a task
+2025-05-16 10:56:44,668 - ERROR - [malconv_analyzer.py:443] - VirusTotal scan failed:
+Traceback (most recent call last):
+  File "/home/datnlq/Malconv/MalConv/malconv_analyzer.py", line 399, in _check_virustotal_async
+    file_report = await run_with_timeout(
+  File "/home/datnlq/Malconv/MalConv/malconv_analyzer.py", line 388, in run_with_timeout
+    return await asyncio.wait_for(coro, timeout=timeout_seconds)
+  File "/home/datnlq/miniconda3/envs/secml_malware_env/lib/python3.9/asyncio/tasks.py", line 479, in wait_for
+    return fut.result()
+  File "/home/datnlq/miniconda3/envs/secml_malware_env/lib/python3.9/site-packages/vt/client.py", line 660, in get_object_async
+    response = await self.get_async(path, *path_args, params=params)
+  File "/home/datnlq/miniconda3/envs/secml_malware_env/lib/python3.9/site-packages/vt/client.py", line 529, in get_async
+    await self._get_session().get(
+  File "/home/datnlq/miniconda3/envs/secml_malware_env/lib/python3.9/site-packages/aiohttp/client.py", line 607, in _request
+    with timer:
+  File "/home/datnlq/miniconda3/envs/secml_malware_env/lib/python3.9/site-packages/aiohttp/helpers.py", line 650, in __enter__
+    raise RuntimeError("Timeout context manager should be used inside a task")
+RuntimeError: Timeout context manager should be used inside a task
+2025-05-16 10:56:44,864 - ERROR - [base_events.py:1753] - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0xffff577712b0>

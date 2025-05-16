@@ -1,0 +1,19 @@
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:93] - === System Information ===
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:94] - Analysis started at: 20250516_105905
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:95] - Target file: whatami
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:96] - Log file: logs/whatami_20250516_105905.log
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:97] - Python version: 3.9.21 (main, Dec 11 2024, 16:27:47) 
+[GCC 11.2.0]
+2025-05-16 10:59:05,780 - DEBUG - [malconv_analyzer.py:98] - Operating system: Linux
+2025-05-16 10:59:05,781 - DEBUG - [malconv_analyzer.py:99] - Machine: aarch64
+2025-05-16 10:59:05,781 - DEBUG - [malconv_analyzer.py:100] - Process ID: 2539732
+2025-05-16 10:59:05,781 - DEBUG - [malconv_analyzer.py:104] - Total memory: 1.87 GB
+2025-05-16 10:59:05,781 - DEBUG - [malconv_analyzer.py:105] - Available memory: 0.47 GB
+2025-05-16 10:59:05,781 - DEBUG - [malconv_analyzer.py:106] - ==================================================
+2025-05-16 10:59:05,781 - INFO - [malconv_analyzer.py:132] - Initializing VirusTotal client...
+2025-05-16 10:59:05,781 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 10:59:05,781 - INFO - [malconv_analyzer.py:132] - VirusTotal client initialized
+2025-05-16 10:59:05,781 - INFO - [malconv_analyzer.py:132] - Initializing MalConv model...
+2025-05-16 10:59:05,886 - INFO - [malconv_analyzer.py:132] - Initializing attack methods...
+2025-05-16 10:59:05,887 - WARNING - [malconv_analyzer.py:128] - Memory Usage: 468.7 MB
+2025-05-16 10:59:05,891 - ERROR - [malconv_analyzer.py:124] - Error analyzing file samples/whatami: Not a valid PE32 file

@@ -17,7 +17,7 @@
 **CẢNH BÁO**: Tool này làm việc trực tiếp với mã độc thực. Việc sử dụng không đúng cách có thể gây nguy hiểm cho hệ thống của bạn.
 
 - Chỉ sử dụng trong môi trường sandbox cô lập
-- Không chạy mã độc trên máy thật
+- Không chạy mã độc trên máy thật #[Sample Malware](http://www.tekdefense.com/downloads/malware-samples)
 - Đảm bảo không có kết nối internet trực tiếp
 - Backup dữ liệu quan trọng trước khi sử dụng
 
@@ -32,6 +32,136 @@
    - Không được sử dụng cho mục đích tấn công
    - Không chịu trách nhiệm về việc lạm dụng tool
 
+# MalConv Analyzer - Test Scenarios & Evaluation Guide
+
+## 1. Kịch bản phân tích cơ bản
+
+### 1.1 Phân tích file PE thông thường
+```bash
+python malconv_analyzer.py --target-file samples/benign.exe
+```
+**Kết quả mong đợi:**
+- Điểm số MalConv < 0.5
+- Phân loại là "Benign"
+- Không thực hiện tấn công né tránh
+
+### 1.2 Phân tích mã độc
+```bash
+python malconv_analyzer.py --target-file samples/malware.exe
+```
+**Kết quả mong đợi:**
+- Điểm số MalConv > 0.5
+- Phân loại là "Malware"
+- Tự động thực hiện tấn công né tránh
+
+## 2. Kịch bản tấn công né tránh
+
+### 2.1 Header Evasion Attack
+Khi phát hiện là mã độc, tool sẽ:
+- Sửa đổi PE header để giảm điểm phát hiện
+- Tạo file mới: `analysis_results/header_evasion_[filename].exe`
+- Mục tiêu: Điểm số sau tấn công < 0.5
+
+### 2.2 FGSM Attack
+Sau header evasion:
+- Thực hiện tấn công gradient-based
+- Tạo file mới: `analysis_results/fgsm_[filename].exe`
+- Mục tiêu: Điểm số sau tấn công < 0.5
+
+## 3. Tích hợp VirusTotal
+
+### 3.1 Quét file gốc
+```bash
+python malconv_analyzer.py --target-file samples/malware.exe --vt-api-key YOUR_API_KEY
+```
+**Kiểm tra:**
+- Tỷ lệ phát hiện ban đầu
+- Số lượng engine phát hiện
+- URL báo cáo chi tiết
+
+### 3.2 Quét file sau tấn công
+**Đánh giá hiệu quả né tránh:**
+- So sánh tỷ lệ phát hiện trước/sau
+- Kiểm tra các engine bị bypass
+- Xác nhận tính khả thi của tấn công
+
+## 4. Debug Mode
+
+### 4.1 Ghi log chi tiết
+```bash
+python malconv_analyzer.py --target-file sample.exe --debug
+```
+**Kiểm tra log:**
+- Thông tin hệ thống
+- Memory usage
+- Chi tiết quá trình phân tích
+- Lỗi và exceptions
+
+## 5. Đánh giá hiệu năng
+
+### 5.1 Sử dụng bộ nhớ
+- Giới hạn: 2GB RAM
+- Monitor qua psutil
+- Garbage collection
+
+### 5.2 Thời gian xử lý
+**Đo thời gian cho:**
+- Phân tích MalConv: ~5-10s
+- Header Evasion: ~30-60s
+- FGSM Attack: ~20-40s
+- VirusTotal scan: phụ thuộc API
+
+## 6. Báo cáo kết quả
+
+### 6.1 Format báo cáo
+```
+==================================================
+           MALWARE ANALYSIS REPORT           
+==================================================
+File: sample.exe
+Size: 250.5 KB
+Classification: Malware
+Confidence Score: 0.8765
+
+VirusTotal Results (Original):
+- Detections: 45/70
+- Scan Date: 2025-05-16
+- Report URL: https://www.virustotal.com/...
+
+[Chi tiết các cuộc tấn công né tránh]
+==================================================
+```
+
+### 6.2 Log file (Debug mode)
+```
+logs/sample.exe_20250516_110035.log
+```
+
+## 7. Yêu cầu hệ thống
+- Python 3.9+
+- 2GB RAM tối thiểu
+- VirusTotal API key (optional)
+- Môi trường sandbox để test
+
+## 8. Tiêu chí đánh giá thành công
+1. **Phân loại chính xác**
+   - True Positive Rate > 90%
+   - False Positive Rate < 5%
+
+2. **Hiệu quả né tránh**
+   - Giảm điểm số MalConv > 50%
+   - Giảm tỷ lệ phát hiện VirusTotal > 30%
+
+3. **Hiệu năng**
+   - Thời gian phân tích < 2 phút/file
+   - Memory usage < 2GB
+   - Không crash với file lớn
+
+4. **Logging & Reporting**
+   - Log đầy đủ thông tin
+   - Báo cáo dễ đọc
+   - Có thể trace lỗi
+
 ## 📁 Cấu trúc dự án
 ```
 MalConv
@@ -39,15 +169,23 @@ MalConv
 │   ├── fgsm_shell.exe
 │   └── header_evasion_shell.exe
 ├── Example.log
+├── logs
+│   ├── 1.exe_20250516_112040.log
+│   ├── 854137.exe_20250516_112324.log
+│   ├── Bombermania.exe_20250516_105644.log
+│   ├── shell.exe_20250516_112410.log
+│   └── whatami_20250516_105905.log
 ├── malconv_analyzer.py
 ├── README.md
 ├── results
 │   ├── fgsm_shell.exe
 │   └── header_evasion_shell.exe
 ├── samples
-│   ├── calc.exe
+│   ├── 1.exe.zip
+│   ├── 854137.exe.zip
+│   ├── Bombermania.exe.zip
 │   ├── eicar.com
-│   └── shell.exe
+│   └── whatami.zip
 └── tests
     ├── blackbox_malconv.py
     ├── malconv_analyzer copy.py
@@ -74,68 +212,155 @@ graph TD
     G --> H[Xuất báo cáo]
     D -->|Không| H
 ```
+## Cấu trúc code chi tiết
 
-## Cấu trúc code
+### 1. Core Classes
 
-### 1. Class MalwareAnalyzer
-Class chính quản lý toàn bộ quá trình phân tích
-
-#### Phương thức khởi tạo
+#### MalwareAnalyzer
 ```python
-def __init__(self, output_folder: str, vt_api_key: str = None, debug: bool = False)
+class MalwareAnalyzer:
+    def __init__(self, output_folder: str, vt_api_key: str = None, debug: bool = False):
+        """Khởi tạo analyzer với output directory và VirusTotal API key"""
 ```
-- `output_folder`: Thư mục lưu kết quả
-- `vt_api_key`: API key của VirusTotal
-- `debug`: Bật/tắt chế độ debug
 
-#### Phân tích file
+#### Initialization Methods
 ```python
-def analyze_file(self, file_path: str) -> Optional[Dict[str, Any]]
+def _initialize_models(self) -> None:
+    """Khởi tạo model MalConv và các thành phần cần thiết"""
+    
+def initialize_virustotal(self, api_key: str) -> None:
+    """Khởi tạo VirusTotal client với API key"""
 ```
-- Đọc và phân tích file input
-- Thực hiện phân loại với MalConv
-- Khởi chạy các tấn công nếu là mã độc
 
-### 2. Các phương thức tấn công
+### 2. Analysis Methods
 
-#### Tấn công Header
+#### Main Analysis
 ```python
-def _perform_header_evasion(self, x: np.ndarray, file_path: str) -> Dict[str, Any]
+def analyze_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    """
+    Phân tích file chính
+    Args:
+        file_path: Đường dẫn đến file cần phân tích
+    Returns:
+        Dict chứa kết quả phân tích hoặc None nếu lỗi
+    """
 ```
-**Tham số:**
-- Số lần lặp: 25 #có thể tuỳ chỉnh
-- Ngưỡng: 0.1
-- Khởi tạo ngẫu nhiên: False
 
-**Công dụng:**
-- Sửa đổi PE header để né tránh phát hiện
-- Tạo file mới đã được sửa đổi
-- Trả về kết quả và đường dẫn file
-
-#### Tấn công FGSM 
+#### Evasion Attacks
 ```python
-def _perform_fgsm_attack(self, x: np.ndarray, file_path: str) -> Dict[str, Any]
+def _perform_header_evasion(self, x: np.ndarray, file_path: str) -> Dict[str, Any]:
+    """
+    Thực hiện tấn công Header Evasion
+    Args:
+        x: Input array đã được chuẩn hóa
+        file_path: Đường dẫn file gốc
+    Returns:
+        Dict chứa kết quả và đường dẫn file mới
+    Params:
+        - iterations: 25 (số lần lặp)
+        - threshold: 0.1 (ngưỡng chấp nhận)
+        - random_init: False
+    """
+
+def _perform_fgsm_attack(self, x: np.ndarray, file_path: str) -> Dict[str, Any]:
+    """
+    Thực hiện tấn công FGSM
+    Args:
+        x: Input array đã được chuẩn hóa
+        file_path: Đường dẫn file gốc
+    Returns:
+        Dict chứa kết quả và đường dẫn file mới
+    Params:
+        - padding: 512 bytes
+        - epsilon: 4.0
+        - iterations: 3
+    """
 ```
-**Tham số:**
-- Bytes padding: 512
-- Epsilon: 4.0 
-- Số lần lặp: 3 #có thể tuỳ chỉnh
 
-**Công dụng:**
-- Thực hiện tấn công gradient
-- Tạo file né tránh mới
-- Trả về kết quả và đường dẫn
+### 3. VirusTotal Integration
 
-### 3. Tích hợp VirusTotal
-
-#### Kiểm tra file
+#### API Methods
 ```python
-def _check_virustotal(self, file_path: str) -> Dict
+async def _check_virustotal_async(self, file_path: str) -> Dict:
+    """
+    Kiểm tra file với VirusTotal API (async)
+    Args:
+        file_path: Đường dẫn file cần quét
+    Returns:
+        Dict chứa kết quả quét
+    Timeouts:
+        - Get report: 30s
+        - Upload file: 60s
+        - Analysis check: 5s/lần
+    """
+
+def _check_virustotal(self, file_path: str) -> Dict:
+    """Wrapper đồng bộ cho _check_virustotal_async"""
 ```
-**Chức năng:**
-- Tính hash của file
-- Upload và quét trên VirusTotal
-- Phân tích kết quả phát hiện
+
+### 4. Utility Functions
+
+#### File Processing
+```python
+def _get_file_hash(self, file_path: str) -> str:
+    """
+    Tính SHA256 hash của file
+    Args:
+        file_path: Đường dẫn file
+    Returns:
+        Chuỗi hash SHA256
+    """
+
+def _parse_vt_report(self, report) -> Dict:
+    """
+    Parse kết quả từ VirusTotal
+    Args:
+        report: JSON response từ VT API
+    Returns:
+        Dict với thông tin đã được format
+    """
+```
+
+#### Logging & Reporting
+```python
+def setup_logging(target_file: str, output_folder: str = "analysis_results", debug: bool = False) -> None:
+    """
+    Thiết lập logging system
+    Args:
+        target_file: Tên file được phân tích
+        output_folder: Thư mục chứa log
+        debug: Bật/tắt chế độ debug
+    Format:
+        Debug: '%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+        Info: '%(message)s'
+    """
+
+def print_analysis_report(self, result: Dict[str, Any]) -> None:
+    """
+    In báo cáo phân tích chi tiết
+    Args:
+        result: Dict chứa kết quả phân tích
+    Sections:
+        - Thông tin file
+        - Kết quả MalConv
+        - Kết quả tấn công né tránh
+        - Kết quả VirusTotal
+    """
+```
+
+### 5. Memory Management
+```python
+def monitor_memory() -> None:
+    """
+    Giám sát sử dụng bộ nhớ
+    Returns:
+        None, in thông tin qua print_step
+    Monitors:
+        - RSS (Resident Set Size)
+        - Virtual Memory
+        - Swap usage
+    """
+```
 
 ## Cách sử dụng
 
@@ -209,86 +434,6 @@ docker run -it --rm \
    - Tấn công hệ thống
    - Phát tán mã độc
    - Các hoạt động phi pháp
-
-## 🔧 Chi tiết kỹ thuật
-
-### 1. Khởi tạo và Cấu hình
-```python
-# Cấu hình logging
-def setup_logging(debug: bool = False) -> None:
-    """Thiết lập logging với timestamp"""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = f'malconv_analysis_{timestamp}.log'
-```
-
-### 2. Quy trình Phân tích
-1. **Đọc file và tiền xử lý**
-   - Kiểm tra định dạng PE
-   - Chuyển đổi thành numpy array
-   - Chuẩn hóa dữ liệu
-
-2. **Phân loại với MalConv**
-   - Score > 0.5: Phân loại là mã độc
-   - Score ≤ 0.5: Phân loại là file lành tính
-
-3. **Tấn công né tránh (với mã độc)**
-   - Header Evasion Attack:
-     - 25 lần lặp
-     - Ngưỡng: 0.1
-     - Sửa đổi PE header
-   
-   - FGSM Attack:
-     - 512 bytes padding
-     - Epsilon: 4.0
-     - 3 lần lặp
-
-4. **Quét VirusTotal**
-   - File gốc
-   - File sau Header Evasion
-   - File sau FGSM Attack
-
-### 3. Xử lý Bộ nhớ
-```python
-def monitor_memory():
-    """Giám sát sử dụng bộ nhớ"""
-    process = psutil.Process()
-    mem_info = process.memory_info()
-    print_step(f"Memory Usage: {mem_info.rss / 1024 / 1024:.1f} MB")
-```
-
-### 4. Định dạng Báo cáo
-```
-==================================================
-           BÁO CÁO PHÂN TÍCH MÃ ĐỘC           
-==================================================
-File: [tên file]
-Kích thước: [size] KB
-Phân loại: [Mã độc/Lành tính]
-Điểm tin cậy: [0-1]
-
-VirusTotal (Gốc):
-- Phát hiện: [X/Y]
-- Ngày quét: [ngày]
-- URL báo cáo: [url]
-
-Kết quả Header Evasion:
-- Điểm số: [0-1]
-- File: [tên file]
-- VirusTotal: [X/Y]
-
-Kết quả FGSM:
-- Điểm số: [0-1]
-- File: [tên file]
-- VirusTotal: [X/Y]
-==================================================
-```
-
-### 5. Xử lý Lỗi
-- Kiểm tra định dạng file
-- Xử lý timeout VirusTotal
-- Quản lý bộ nhớ
-- Log lỗi chi tiết
-
 
 ## 📚 Tài liệu tham khảo
 1. MalConv paper: [secml-malware: Pentesting Windows Malware Classifiers with
