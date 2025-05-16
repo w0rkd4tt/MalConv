@@ -3,8 +3,8 @@
 ████╗ ████║██╔══██╗██║    ██╔════╝██╔═══██╗████╗  ██║██║   ██║
 ██╔████╔██║███████║██║    ██║     ██║   ██║██╔██╗ ██║██║   ██║
 ██║╚██╔╝██║██╔══██║██║    ██║     ██║   ██║██║╚██╗██║╚██╗ ██╔╝
-██║ ╚═╝ ██║██║  ██║██║    ╚██████╗╚██████╔╝██║ ╚████║ ╚████╔╝ 
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝  ╚═══╝  
+██║ ╚═╝ ██║██║  ██║██║██║  ╚██████╗╚██████╔╝██║ ╚████║ ╚████╔╝ 
+╚═╝     ╚═╝╚═╝  ╚═╝╚════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝  ╚═══╝  
                                                                 
 ╔═══════════════════════════════════════════════════════════════╗
 ║                     MalConv Analyzer Tool                      ║
@@ -210,17 +210,6 @@ docker run -it --rm \
    - Phát tán mã độc
    - Các hoạt động phi pháp
 
-## 📚 Tài liệu tham khảo
-1. MalConv paper: [Link](https://arxiv.org/abs/1710.09435)
-2. FGSM attack: [Link](https://arxiv.org/abs/1412.6572)
-3. PE Header structure: [Link](https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
-
-## 👥 Đóng góp
-Mọi đóng góp đều được chào đón! Vui lòng đọc CONTRIBUTING.md trước khi bắt đầu.
-
-## License
-MIT License
-
 ## 🔧 Chi tiết kỹ thuật
 
 ### 1. Khởi tạo và Cấu hình
@@ -299,3 +288,41 @@ Kết quả FGSM:
 - Xử lý timeout VirusTotal
 - Quản lý bộ nhớ
 - Log lỗi chi tiết
+
+
+## 📚 Tài liệu tham khảo
+1. MalConv paper: [secml-malware: Pentesting Windows Malware Classifiers with
+Adversarial EXEmples in Python](https://arxiv.org/pdf/2104.12848v3)
+2. secml_malware: [secml_malware](https://github.com/pralab/secml_malware)
+
+
+## 👥 Đóng góp
+Mọi đóng góp đều được chào đón! Vui lòng đọc CONTRIBUTING.md trước khi bắt đầu.
+
+## 👨‍💻 Tác giả
+- **Nguyễn Lê Quốc Đạt**
+  - Email: datnguyenlequoc2001@gmail.com
+  - GitHub: [datnlq](https://github.com/w0rkd4tt)
+- **Hoàng Anh Tuấn**
+
+## 🙏 Lời cảm ơn
+Chúng tôi xin chân thành cảm ơn:
+
+- Cộng đồng nghiên cứu bảo mật
+- Các nhà phát triển đã đóng góp
+- Tài liệu tham khảo từ các nguồn mở
+- Đặc biệt, các mô hình AI đã hỗ trợ:
+  - ChatGPT
+  - Claude
+  - Grok
+  - Gemini
+  - Copilot && Cursor
+
+## 📞 Liên hệ
+Nếu có câu hỏi hoặc cần hỗ trợ:
+
+- **Email**: datnguyenlequoc2001@gmail.com 
+- **Issues**: [GitHub Issues](https://github.com/datnlq/malconv/issues)
+
+## ⚡ Lưu ý quan trọng
+> Repository này **chỉ phục vụ mục đích giáo dục**. Người sử dụng hoàn toàn chịu trách nhiệm về việc sử dụng mã nguồn.
