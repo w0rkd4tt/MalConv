@@ -1,0 +1,23 @@
+2025-05-16 13:21:27,608 - DEBUG - [malconv_analyzer.py:94] - === System Information ===
+2025-05-16 13:21:27,608 - DEBUG - [malconv_analyzer.py:95] - Analysis started at: 20250516_132127
+2025-05-16 13:21:27,608 - DEBUG - [malconv_analyzer.py:96] - Target file: 854137.exe
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:97] - Log file: logs/854137.exe_20250516_132127.log
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:98] - Python version: 3.9.21 (main, Dec 11 2024, 16:27:47) 
+[GCC 11.2.0]
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:99] - Operating system: Linux
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:100] - Machine: aarch64
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:101] - Process ID: 2617320
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:105] - Total memory: 1.87 GB
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:106] - Available memory: 0.48 GB
+2025-05-16 13:21:27,609 - DEBUG - [malconv_analyzer.py:107] - ==================================================
+2025-05-16 13:21:27,609 - INFO - [malconv_analyzer.py:133] - Initializing VirusTotal client...
+2025-05-16 13:21:27,609 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:21:27,610 - INFO - [malconv_analyzer.py:133] - VirusTotal client initialized
+2025-05-16 13:21:27,610 - INFO - [malconv_analyzer.py:133] - Initializing MalConv model...
+2025-05-16 13:21:27,724 - INFO - [malconv_analyzer.py:133] - Initializing attack methods...
+2025-05-16 13:21:27,726 - WARNING - [malconv_analyzer.py:129] - Memory Usage: 468.1 MB
+2025-05-16 13:21:27,733 - INFO - [malconv_analyzer.py:133] - Analyzing file: samples/854137.exe
+2025-05-16 13:21:27,733 - DEBUG - [malconv_analyzer.py:214] - Starting analysis of samples/854137.exe
+2025-05-16 13:21:27,733 - INFO - [malconv_analyzer.py:133] - File size: 71.00 KB
+2025-05-16 13:21:28,147 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:21:28,147 - INFO - [malconv_analyzer.py:133] - Scanning with VirusTotal...

@@ -447,7 +447,7 @@ Mọi đóng góp đều được chào đón! Vui lòng đọc CONTRIBUTING.md 
 ## 👨‍💻 Tác giả
 - **Nguyễn Lê Quốc Đạt**
   - Email: datnguyenlequoc2001@gmail.com
-  - GitHub: [datnlq](https://github.com/w0rkd4tt)
+  - GitHub: [w0rkkd4tt](https://github.com/w0rkd4tt)
 - **Hoàng Anh Tuấn**
 
 ## 🙏 Lời cảm ơn

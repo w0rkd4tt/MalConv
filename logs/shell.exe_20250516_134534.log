@@ -1,0 +1,41 @@
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:94] - === System Information ===
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:95] - Analysis started at: 20250516_134534
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:96] - Target file: shell.exe
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:97] - Log file: logs/shell.exe_20250516_134534.log
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:98] - Python version: 3.9.21 (main, Dec 11 2024, 16:27:47) 
+[GCC 11.2.0]
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:99] - Operating system: Linux
+2025-05-16 13:45:34,753 - DEBUG - [malconv_analyzer.py:100] - Machine: aarch64
+2025-05-16 13:45:34,754 - DEBUG - [malconv_analyzer.py:101] - Process ID: 2629591
+2025-05-16 13:45:34,754 - DEBUG - [malconv_analyzer.py:105] - Total memory: 1.87 GB
+2025-05-16 13:45:34,754 - DEBUG - [malconv_analyzer.py:106] - Available memory: 0.50 GB
+2025-05-16 13:45:34,754 - DEBUG - [malconv_analyzer.py:107] - ==================================================
+2025-05-16 13:45:34,754 - INFO - [malconv_analyzer.py:133] - Initializing VirusTotal client...
+2025-05-16 13:45:34,754 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:45:34,754 - INFO - [malconv_analyzer.py:133] - VirusTotal client initialized
+2025-05-16 13:45:34,754 - INFO - [malconv_analyzer.py:133] - Initializing MalConv model...
+2025-05-16 13:45:34,853 - INFO - [malconv_analyzer.py:133] - Initializing attack methods...
+2025-05-16 13:45:34,854 - WARNING - [malconv_analyzer.py:129] - Memory Usage: 469.4 MB
+2025-05-16 13:45:34,855 - INFO - [malconv_analyzer.py:133] - Analyzing file: samples/shell.exe
+2025-05-16 13:45:34,855 - DEBUG - [malconv_analyzer.py:214] - Starting analysis of samples/shell.exe
+2025-05-16 13:45:34,855 - INFO - [malconv_analyzer.py:133] - File size: 72.07 KB
+2025-05-16 13:45:34,996 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:45:34,996 - INFO - [malconv_analyzer.py:133] - Scanning with VirusTotal...
+2025-05-16 13:45:35,836 - INFO - [malconv_analyzer.py:133] - Performing Header Evasion Attack...
+2025-05-16 13:45:43,907 - INFO - [c_log.py:258] - Point: 0/1, f(x):0.08047651499509811
+2025-05-16 13:45:43,982 - INFO - [c_log.py:258] - y_pred after attack:
+CArray([0])
+2025-05-16 13:45:43,984 - INFO - [malconv_analyzer.py:133] - Header Evasion Attack completed
+2025-05-16 13:45:44,115 - INFO - [malconv_analyzer.py:133] - Evasion sample saved: analysis_results/header_evasion_shell.exe
+2025-05-16 13:45:44,177 - INFO - [malconv_analyzer.py:133] - Header Evasion score: 0.0805
+2025-05-16 13:45:44,178 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:45:44,180 - INFO - [malconv_analyzer.py:133] - Scanning with VirusTotal...
+2025-05-16 13:45:44,810 - INFO - [malconv_analyzer.py:133] - Performing FGSM Attack...
+2025-05-16 13:45:55,098 - INFO - [c_log.py:258] - Point: 0/1, f(x):6.693604551449493e-32
+2025-05-16 13:45:55,175 - INFO - [c_log.py:258] - y_pred after attack:
+CArray([0])
+2025-05-16 13:45:55,176 - INFO - [malconv_analyzer.py:133] - FGSM Attack completed
+2025-05-16 13:45:55,285 - INFO - [malconv_analyzer.py:133] - FGSM sample saved: analysis_results/fgsm_shell.exe
+2025-05-16 13:45:55,360 - INFO - [malconv_analyzer.py:133] - FGSM score: 0.0000
+2025-05-16 13:45:55,360 - DEBUG - [selector_events.py:54] - Using selector: EpollSelector
+2025-05-16 13:45:55,360 - INFO - [malconv_analyzer.py:133] - Scanning with VirusTotal...
