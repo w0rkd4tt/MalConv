@@ -322,7 +322,7 @@ Chúng tôi xin chân thành cảm ơn:
 Nếu có câu hỏi hoặc cần hỗ trợ:
 
 - **Email**: datnguyenlequoc2001@gmail.com 
-- **Issues**: [GitHub Issues](https://github.com/datnlq/malconv/issues)
+- **Issues**: [GitHub Issues](https://github.com/w0rkd4tt/MalConv/issues)
 
 ## ⚡ Lưu ý quan trọng
 > Repository này **chỉ phục vụ mục đích giáo dục**. Người sử dụng hoàn toàn chịu trách nhiệm về việc sử dụng mã nguồn.
