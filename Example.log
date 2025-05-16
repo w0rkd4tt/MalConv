@@ -1,0 +1,63 @@
+secml_malware_env) ┌──(datnlq㉿datnlq)-[~/Malconv/MalConv]
+└─$ # Limit virtual memory to 2GB
+ulimit -v 2097152
+# Run analysis
+python malconv_analyzer.py --target-file samples/shell.exe --vt-api-key e166b9fb053cecc96a86259f87c0e14f49b9497a95acc5bae034453ad674e9d9
+
+╔═══════════════════════════════════════════════════════════════╗
+║                     MalConv Analyzer Tool                      ║
+║                Advanced Malware Analysis & Evasion             ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[+] Initializing VirusTotal client...
+[+] VirusTotal client initialized
+[+] Initializing MalConv model...
+[+] Initializing attack methods...
+2025-05-15 12:28:05,691 - root - WARNING - Memory Usage: 439.2 MB
+[WARNING] Memory Usage: 439.2 MB
+[+] Analyzing file: samples/shell.exe
+[+] File size: 72.07 KB
+[+] Scanning with VirusTotal...
+[+] Performing Header Evasion Attack...
+[+] Header Evasion Attack completed
+[+] Evasion sample saved: analysis_results/header_evasion_shell.exe
+[+] Header Evasion score: 0.0287
+[+] Scanning with VirusTotal...
+2025-05-15 12:28:08,381 - root - WARNING - File not found in VT database, uploading...
+[WARNING] File not found in VT database, uploading...
+[+] Performing FGSM Attack...
+[+] FGSM Attack completed
+[+] FGSM sample saved: analysis_results/fgsm_shell.exe
+[+] FGSM score: 0.0000
+[+] Scanning with VirusTotal...
+2025-05-15 12:29:34,705 - root - WARNING - File not found in VT database, uploading...
+[WARNING] File not found in VT database, uploading...
+
+==================================================
+           MALWARE ANALYSIS REPORT           
+==================================================
+File: shell.exe
+Size: 72.07 KB
+Classification: Malware
+Confidence Score: 0.9983
+
+VirusTotal Results (Original):
+- Detections: 60/76
+- Scan Date: 2025-05-14 03:11:34+00:00
+- Report URL: https://www.virustotal.com/gui/file/5e09427737d1e40ddc8569d99e3d44bf6d6aac8ef5236a410ecfb76169d53a4a
+
+Header Evasion Attack:
+- Final Score: 0.0287
+- Sample saved as: header_evasion_shell.exe
+
+VirusTotal Results (Header Evasion):
+- Detections: 58/75
+- Scan Date: 2025-05-15 16:28:12+00:00
+- Report URL: https://www.virustotal.com/gui/file/803b7af03f09e12267239f79a4c240f2a6a5246e14082990339c6ab9fee62f7e
+==================================================
+
+2025-05-15 12:29:57,548 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0xffff618a3a00>
+2025-05-15 12:29:57,549 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0xffff5984f6a0>, 1235639.321224401)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0xffff618ace20>, 1235658.560775037)])']
+connector: <aiohttp.connector.TCPConnector object at 0xffff618a35e0>
