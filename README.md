@@ -13,6 +13,10 @@
 ```
 # MalConv Analyzer Tool
 
+`MalConv Analyzer` là một công cụ phân tích mã độc tự động được thiết kế để kiểm thử và đánh giá khả năng chống chịu của các bộ phân loại mã độc Windows dựa trên `MachineLearning`. Công cụ này sử dụng mạng neural sâu `MalConv` để phân loại tệp thực thi PE và kết hợp với các kỹ thuật tấn công né tránh tiên tiến. Nền tảng cho sự phát triển của công cụ này xuất phát từ các nghiên cứu quan trọng trong lĩnh vực an ninh mạng, vốn đã chỉ ra rằng các hệ thống phát hiện mã độc dựa trên học máy có thể bị đánh lừa bởi các mẫu EXE đối kháng (adversarial EXEmples). Các mẫu này được tạo ra bằng cách áp dụng các thao tác thực tiễn lên tệp thực thi Windows mà vẫn giữ nguyên chức năng ban đầu của mã độc, nhưng làm thay đổi cấu trúc tệp tin theo cách khiến mô hình học máy phân loại sai.
+
+Công cụ này đóng vai trò là một tài nguyên giá trị cho `nghiên cứu học thuật` trong việc đánh giá hiệu quả của MalConv, phân tích sâu hơn các kỹ thuật né tránh phát hiện, và thử nghiệm khả năng phòng thủ của mô hình. Lưu ý rằng tool này làm việc trực tiếp với mã độc thực và chỉ nên được sử dụng trong môi trường sandbox cô lập cho mục đích `nghiên cứu và giáo dục`.
+
 ## ⚠️ Cảnh báo về độ nguy hiểm
 **CẢNH BÁO**: Tool này làm việc trực tiếp với mã độc thực. Việc sử dụng không đúng cách có thể gây nguy hiểm cho hệ thống của bạn.
 
